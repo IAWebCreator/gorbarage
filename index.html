@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gorbarage - The Ultimate Meme Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@400&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        :root {
+            --primary-orange: #FF8C00;
+            --primary-black: #000000;
+            --accent-lime: #7FFF00;
+            --accent-pink: #FF1493;
+            --dark-grey: #333333;
+            --white: #FFFFFF;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--primary-black);
+            background: var(--primary-orange);
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="%23000" opacity="0.3"/><circle cx="12" cy="12" r="3" fill="%23000"/></svg>'), auto;
+        }
+
+        /* Animated Background Canvas */
+        #background-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Fart particles container */
+        .fart-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .fart-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary-black);
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+
+        /* Typography */
+        .meme-style-heading {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 8vw, 8rem);
+            color: var(--primary-black);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 4px 4px 0px var(--white), 8px 8px 0px var(--accent-lime);
+            margin-bottom: 1rem;
+            animation: wobble 3s ease-in-out infinite;
+        }
+
+        .engaging-subheading {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--primary-black);
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 0px var(--white);
+        }
+
+        .section-title-with-animation {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            color: var(--primary-black);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 3px 3px 0px var(--white);
+            position: relative;
+        }
+
+        .section-title-with-animation::after {
+            content: '💨';
+            position: absolute;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            animation: float 2s ease-in-out infinite;
+        }
+
+        /* Keyframe Animations */
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-2deg) scale(1.02); }
+            50% { transform: rotate(0deg) scale(0.98); }
+            75% { transform: rotate(2deg) scale(1.02); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(-50%) translateX(0px); }
+            50% { transform: translateY(-50%) translateX(10px); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Layout Components */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        .hero-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 4rem 2rem;
+            border-radius: 30px;
+            border: 3px solid var(--primary-black);
+            box-shadow: var(--shadow);
+            max-width: 800px;
+            position: relative;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .hero-bear {
+            width: 150px;
+            height: 150px;
+            background: var(--primary-black);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            margin: 0 auto 2rem;
+            position: relative;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .interactive-button {
+            background: var(--primary-black);
+            color: var(--white);
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .interactive-button:hover {
+            transform: scale(1.1) rotate(-2deg);
+            background: var(--accent-lime);
+            color: var(--primary-black);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .interactive-button:active {
+            transform: scale(0.95);
+        }
+
+        /* Creative Sections */
+        .creative-section {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .creative-section:nth-child(even) {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .content-block {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 25px;
+            border: 3px solid var(--primary-black);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .content-block:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+        }
+
+        .rounded-image-with-shadow {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 20px;
+            border: 3px solid var(--primary-black);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .rounded-image-with-shadow:hover {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        /* Tokenomics Visualization */
+        .data-visualization {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .data-point {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 3px solid var(--primary-black);
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .data-point:hover {
+            transform: translateY(-15px) scale(1.05);
+            background: var(--accent-lime);
+        }
+
+        .data-point::before {
+            content: '🎯';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 3rem;
+            opacity: 0.3;
+        }
+
+        .data-label {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .data-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-black);
+        }
+
+        /* How to Buy Steps */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 3px solid var(--primary-black);
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .step:hover {
+            transform: translateY(-10px) rotate(-1deg);
+            background: var(--accent-pink);
+            color: var(--white);
+        }
+
+        .step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: var(--primary-black);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .step-title {
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            margin-top: 1rem;
+            text-transform: uppercase;
+        }
+
+        /* Timeline */
+        .timeline-events {
+            position: relative;
+            margin-top: 3rem;
+        }
+
+        .timeline-events::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: var(--primary-black);
+            border-radius: 2px;
+        }
+
+        .timeline-event {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .timeline-event:nth-child(odd) {
+            flex-direction: row;
+        }
+
+        .timeline-event:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 3px solid var(--primary-black);
+            box-shadow: var(--shadow);
+            margin: 0 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.05);
+            background: var(--accent-lime);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--primary-black);
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            z-index: 10;
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .social-link {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary-black);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: var(--accent-lime);
+            color: var(--primary-black);
+            box-shadow: var(--shadow);
+        }
+
+        /* Footer */
+        .creative-footer {
+            background: var(--primary-black);
+            color: var(--white);
+            padding: 4rem 0 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .copiable-text {
+            background: var(--white);
+            color: var(--primary-black);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            word-break: break-all;
+        }
+
+        .copiable-text:hover {
+            background: var(--accent-lime);
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content-block {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .timeline-events::before {
+                left: 20px;
+            }
+
+            .timeline-event {
+                flex-direction: row !important;
+                padding-left: 50px;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .timeline-content {
+                margin-left: 0;
+            }
+
+            .section-title-with-animation::after {
+                position: static;
+                display: block;
+                margin-top: 1rem;
+            }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .loaded {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.8s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Canvas -->
+    <canvas id="background-canvas"></canvas>
+    
+    <!-- Fart Particles Container -->
+    <div class="fart-particles" id="fart-particles"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content loading">
+                <div class="hero-bear" id="hero-bear"></div>
+                <h1 class="meme-style-heading">Welcome to the World of GORBARAGE! 🎪</h1>
+                <p class="engaging-subheading">Your portal to the most FARTING AWESOME meme-powered cryptocurrency! 💨😂</p>
+                <button class="interactive-button" id="main-cta">JOIN THE FARTING PARTY! 🎉</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="creative-section" id="about">
+        <div class="container">
+            <h2 class="section-title-with-animation loading">What is GORBARAGE?! 🤪</h2>
+            <div class="content-block loading">
+                <img src="./logo.png" alt="About Gorbarage" class="rounded-image-with-shadow">
+                <div>
+                    <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 1rem;">
+                        WHOOOOOOSH! 💨 Welcome to the WILDEST meme canvas in the crypto universe! Gorbarage isn't just a token - it's a LIFESTYLE of playful farting parties and unhinged digital chaos! 🎭
+                    </p>
+                    <p style="font-size: 1.1rem; line-height: 1.7; margin-bottom: 1rem;">
+                        Born from the beautiful absurdity of internet culture, Gorbarage is your ticket to the most EPIC farting party the blockchain has ever seen! We're not just hodling - we're GIGGLING all the way to the moon! 🚀💨
+                    </p>
+                    <p style="font-size: 1.1rem; line-height: 1.7; font-weight: bold; color: var(--accent-pink);">
+                        GET READY TO FART YOUR WAY TO FINANCIAL FREEDOM! BRRRRRRT! 😂🎪
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tokenomics Section -->
+    <section class="creative-section" id="tokenomics">
+        <div class="container">
+            <h2 class="section-title-with-animation loading">FARTNOMICS! 📊💨</h2>
+            <div class="data-visualization loading">
+                <div class="data-point">
+                    <div class="data-label">Total Supply</div>
+                    <div class="data-value">1,000,000,000</div>
+                </div>
+                <div class="data-point">
+                    <div class="data-label">Burned Tokens</div>
+                    <div class="data-value">50,000,000</div>
+                </div>
+                <div class="data-point">
+                    <div class="data-label">Circulating Supply</div>
+                    <div class="data-value">950,000,000</div>
+                </div>
+                <div class="data-point">
+                    <div class="data-label">Fart Power Level</div>
+                    <div class="data-value">OVER 9000! 💨</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Buy Section -->
+    <section class="creative-section" id="how-to-buy">
+        <div class="container">
+            <h2 class="section-title-with-animation loading">Join the GORBARAGE Farting Army! 🎖️💨</h2>
+            <div class="steps loading">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Get a Wallet! 👛</h3>
+                    <p>Download a sick wallet like MetaMask or Trust Wallet - your gateway to the FARTING DIMENSION! 🌟</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Acquire SOL! ⚡</h3>
+                    <p>Get some Solana from any exchange - we're riding the FASTEST blockchain in the FARTVERSE! 🚀</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Connect to Jupiter! 🪐</h3>
+                    <p>Connect your wallet to Jupiter or Raydium - the BEST DEX for swapping in the Solana ecosystem! 🔥</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Swap SOL for GRB! 🔄</h3>
+                    <p>BOOM! Trade your SOL for GRB tokens and JOIN THE ULTIMATE FARTING PARTY! POOOT! 💨🎉</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section class="creative-section" id="roadmap">
+        <div class="container">
+            <h2 class="section-title-with-animation loading">The GORBARAGE Farting Journey! 🗺️💨</h2>
+            <div class="timeline-events loading">
+                <div class="timeline-event">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3 style="font-weight: bold; margin-bottom: 1rem; font-size: 1.3rem;">Phase 1: The Great Fart Awakening! 🌅💨</h3>
+                        <p>Launch the most EPIC meme token on Solana! Community building, farting contests, and getting listed on major DEXs! BRRRRT!</p>
+                        <small style="color: var(--dark-grey); font-weight: bold;">Q1 2024</small>
+                    </div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3 style="font-weight: bold; margin-bottom: 1rem; font-size: 1.3rem;">Phase 2: Fart-to-Earn Platform! 🎮💨</h3>
+                        <p>Launch our revolutionary Fart-to-Earn gaming platform where players earn GRB by creating the LOUDEST digital farts! ROFLMAO!</p>
+                        <small style="color: var(--dark-grey); font-weight: bold;">Q2 2024</small>
+                    </div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3 style="font-weight: bold; margin-bottom: 1rem; font-size: 1.3rem;">Phase 3: Gorbarage NFT Collection! 🎨💨</h3>
+                        <p>Release exclusive Gorbarage NFTs featuring the most LEGENDARY farting bears in crypto history! Collectible chaos!</p>
+                        <small style="color: var(--dark-grey); font-weight: bold;">Q3 2024</small>
+                    </div>
+                </div>
+                <div class="timeline-event">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3 style="font-weight: bold; margin-bottom: 1rem; font-size: 1.3rem;">Phase 4: GLOBAL FART DOMINATION! 🌍💨</h3>
+                        <p>CEX listings, partnerships, and making Gorbarage the #1 farting meme coin in the ENTIRE UNIVERSE! TO THE MOON AND BEYOND!</p>
+                        <small style="color: var(--dark-grey); font-weight: bold;">Q4 2024</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Section -->
+    <section class="creative-section" id="community">
+        <div class="container">
+            <h2 class="section-title-with-animation loading">Connect with the GORBARAGE Farting Family! 👨‍👩‍👧‍👦💨</h2>
+            <div class="social-links loading">
+                <a href="#" class="social-link">🐦 Twitter</a>
+                <a href="#" class="social-link">📱 Telegram</a>
+                <a href="#" class="social-link">📺 YouTube</a>
+                <a href="#" class="social-link">🎵 TikTok</a>
+                <a href="#" class="social-link">🔧 Dextools</a>
+                <a href="#" class="social-link">📊 Dexscreener</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="creative-footer">
+        <div class="container">
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">© 2024 GORBARAGE. All farting rights reserved! 💨😂</p>
+            <p style="margin-bottom: 1rem;">Contract Address (Click to copy!):</p>
+            <div class="copiable-text" id="contract-address">CHiNsA2B6ZbmKnEmHPCbbX9aXJyoJzAtcLpHEDd6Qyq3</div>
+            <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8;">
+                DISCLAIMER: This is a meme token created for entertainment purposes. Please do your own research and never invest more than you can afford to lose! FARTING RESPONSIBLY! 💨🎭
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Main App Object - FAMILIARITY_FRAMEWORK approach
+        const GorbarageApp = {
+            // State management
+            state: {
+                isLoaded: false,
+                animationSpeed: 1,
+                soundEnabled: false,
+                fartParticles: []
+            },
+
+            // Initialize the app
+            init() {
+                this.setupEventListeners();
+                this.initAnimatedBackground();
+                this.initScrollAnimations();
+                this.initInteractiveElements();
+                this.loadContent();
+            },
+
+            // Event listeners setup
+            setupEventListeners() {
+                document.addEventListener('DOMContentLoaded', () => {
+                    this.loadContent();
+                });
+
+                // Interactive button clicks
+                document.getElementById('main-cta').addEventListener('click', (e) => {
+                    this.triggerFartExplosion(e.target);
+                    this.scrollToSection('about');
+                });
+
+                // Contract address copy functionality
+                document.getElementById('contract-address').addEventListener('click', () => {
+                    this.copyToClipboard('CHiNsA2B6ZbmKnEmHPCbbX9aXJyoJzAtcLpHEDd6Qyq3');
+                });
+
+                // All interactive buttons
+                document.querySelectorAll('.interactive-button, .step, .data-point').forEach(element => {
+                    element.addEventListener('click', (e) => {
+                        this.triggerFartExplosion(e.target);
+                    });
+                });
+
+                // Scroll event for animations
+                window.addEventListener('scroll', () => {
+                    this.handleScrollAnimations();
+                });
+
+                // Hero bear interaction
+                document.getElementById('hero-bear').addEventListener('click', () => {
+                    this.heroBearFart();
+                });
+            },
+
+            // Animated background using Canvas
+            initAnimatedBackground() {
+                const canvas = document.getElementById('background-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size
+                const resizeCanvas = () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                };
+                
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+
+                // Background animation objects
+                const backgroundElements = [];
+                
+                // Create floating elements
+                for (let i = 0; i < 15; i++) {
+                    backgroundElements.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 20 + 10,
+                        speedX: (Math.random() - 0.5) * 0.5,
+                        speedY: (Math.random() - 0.5) * 0.5,
+                        opacity: Math.random() * 0.3 + 0.1,
+                        shape: Math.random() > 0.5 ? 'circle' : 'square'
+                    });
+                }
+
+                // Animation loop
+                const animate = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    backgroundElements.forEach(element => {
+                        // Update position
+                        element.x += element.speedX;
+                        element.y += element.speedY;
+                        
+                        // Bounce off walls
+                        if (element.x <= 0 || element.x >= canvas.width) element.speedX *= -1;
+                        if (element.y <= 0 || element.y >= canvas.height) element.speedY *= -1;
+                        
+                        // Draw element
+                        ctx.save();
+                        ctx.globalAlpha = element.opacity;
+                        ctx.fillStyle = '#000000';
+                        
+                        if (element.shape === 'circle') {
+                            ctx.beginPath();
+                            ctx.arc(element.x, element.y, element.size, 0, Math.PI * 2);
+                            ctx.fill();
+                        } else {
+                            ctx.fillRect(element.x - element.size/2, element.y - element.size/2, element.size, element.size);
+                        }
+                        
+                        ctx.restore();
+                    });
+                    
+                    requestAnimationFrame(animate);
+                };
+                
+                animate();
+            },
+
+            // Scroll-triggered animations
+            initScrollAnimations() {
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('loaded');
+                        }
+                    });
+                }, observerOptions);
+
+                document.querySelectorAll('.loading').forEach(element => {
+                    observer.observe(element);
